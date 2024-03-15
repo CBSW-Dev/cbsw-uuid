@@ -1,0 +1,6 @@
+[submodule "dependencies/cbsw-unit-expect"]
+	path = dependencies/cbsw-unit-expect
+	url = git@github.com:CBSW-Dev/cbsw-unit-expect.git
+[submodule "dependencies/cbsw-unit"]
+	path = dependencies/cbsw-unit
+	url = git@github.com:CBSW-Dev/cbsw-unit.git
