@@ -135,6 +135,6 @@ constexpr ::CBSW::Uuid operator""_uuid(const char *uuid, std::size_t N) noexcept
     return ::CBSW::Uuid(uuid, N);
 }
 
-std::ostream& operator << (std::ostream& stream, const ::CBSW::Uuid& uuid) noexcept {
+inline std::ostream& operator << (std::ostream& stream, const ::CBSW::Uuid& uuid) noexcept {
     return stream << uuid.toString();
 }
