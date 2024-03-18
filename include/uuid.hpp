@@ -55,11 +55,11 @@ namespace CBSW {
             data{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
         {}
 
-        template <int N> constexpr Uuid(const char (&uuid)[N]):
+        template <int N> constexpr Uuid(const char (&uuid)[N]) noexcept:
             Uuid(static_cast<const char *>(uuid), N - 1)
         {}
 
-        constexpr Uuid(const char *uuid, std::size_t N):
+        constexpr Uuid(const char *uuid, std::size_t N) noexcept:
             Precondition(uuid, N),
             data{
                 Private::Uuid::buildByte(0, uuid),
@@ -81,7 +81,7 @@ namespace CBSW {
             }
         {}
 
-        Uuid(const std::uint8_t *uuid):
+        Uuid(const std::uint8_t *uuid) noexcept:
             data{
                 uuid[0], uuid[1], uuid[2], uuid[3],
                 uuid[4], uuid[5], uuid[6], uuid[7],
@@ -115,10 +115,26 @@ namespace CBSW {
             };
             return std::string(array, 36);
         }
+
+        constexpr bool operator == (const Uuid& other) const noexcept {
+            for (uint8_t i = 0; i < 16; ++i) {
+                if (data[i] != other.data[i]) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        constexpr bool operator != (const Uuid& other) const noexcept {
+            return !operator==(other);
+        }
     };
 }
 
-constexpr ::CBSW::Uuid operator""_uuid(const char *uuid, std::size_t N) {
+constexpr ::CBSW::Uuid operator""_uuid(const char *uuid, std::size_t N) noexcept{
     return ::CBSW::Uuid(uuid, N);
 }
 
+std::ostream& operator << (std::ostream& stream, const ::CBSW::Uuid& uuid) noexcept {
+    return stream << uuid.toString();
+}
