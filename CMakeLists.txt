@@ -9,6 +9,11 @@ project(CBSW_Uuid VERSION 1.0.0)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
+if (NOT PROJECT_IS_TOP_LEVEL)
+  set(CBSW_UUID_INCLUDED True PARENT_SCOPE)
+  set(CBSW_UUID_INCLUDE_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include PARENT_SCOPE)
+endif()
+
 set(CBSW_UUID_INCLUDE_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include)
 set(CBSW_UUID_TEST_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/test)
 set(CBSW_UUID_DEPENDENCIES_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/dependencies)
@@ -25,14 +30,13 @@ if(CBSW_UUID_BUILD_TESTS)
   option(CBSW_UNIT_BUILD_EXAMPLES "" OFF)
   option(CBSW_UNIT_EXPECT_BUILD_EXAMPLES "" OFF)
 
-  option(CBSW_UNIT_UUID_EXTERNAL_DEPENDENCIES "are the uuid library's dependencies being built externally" OFF)
-
-  if(NOT CBSW_UNIT_UUID_EXTERNAL_DEPENDENCIES)
-    option(CBSW_UNIT_EXPECT_EXTERNAL_DEPENDENCIES "" ON)
+  if(NOT DEFINED CBSW_UNIT_INCLUDED)
     add_subdirectory(${CBSW_UUID_DEPENDENCIES_DIRECTORY}/cbsw-unit cbsw-unit)
-    add_subdirectory(${CBSW_UUID_DEPENDENCIES_DIRECTORY}/cbsw-unit-expect cbsw-unit-expect)
   endif()
 
+  if(NOT DEFINED CBSW_UNIT_EXPECT_INCLUDED)
+    add_subdirectory(${CBSW_UUID_DEPENDENCIES_DIRECTORY}/cbsw-unit-expect cbsw-unit-expect)
+  endif()
 
   target_precompile_headers(cbsw-uuid-test PRIVATE ${CBSW_UUID_TEST_DIRECTORY}/pch.hpp)
   target_include_directories(cbsw-uuid-test PUBLIC "${CBSW_UUID_TEST_DIRECTORY}")
